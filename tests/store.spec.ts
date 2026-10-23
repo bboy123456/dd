@@ -92,6 +92,11 @@ test("preview blocks checkout and search indexing", async ({ request }) => {
   expect((await checkout.json()).error).toContain("Orders aren't open");
   const robots = await request.get("/robots.txt");
   expect(await robots.text()).toContain("Disallow: /");
+  const status = await request.get("/api/checkout/status");
+  expect(await status.json()).toMatchObject({
+    commerceMode: "not-live",
+    checkoutEnabled: false,
+  });
 });
 
 test("home loads its images and fits the viewport", async ({ page }) => {

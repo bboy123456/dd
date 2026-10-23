@@ -1,7 +1,7 @@
 import "server-only";
 import { cacheLife } from "next/cache";
 import { demoProducts } from "./demo-products";
-import { isLive } from "./config";
+import { isCommerceLive } from "./config";
 import type { Catalog, Product } from "./types";
 
 type WooProduct = {
@@ -50,7 +50,7 @@ function plainText(html: string) {
 export async function getCatalog(): Promise<Catalog> {
   "use cache";
   cacheLife({ stale: 60, revalidate: 60, expire: 300 });
-  if (!isLive) return { products: demoProducts, mode: "demo" };
+  if (!isCommerceLive()) return { products: demoProducts, mode: "demo" };
   try {
     const products: Product[] = [];
     // Read all pages so products do not silently disappear after the first 100.

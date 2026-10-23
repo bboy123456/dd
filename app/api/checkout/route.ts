@@ -1,18 +1,28 @@
 import { createHmac } from "node:crypto";
-import { isLive } from "@/lib/config";
+import { isCheckoutEnabled, isCommerceLive } from "@/lib/config";
 import { wordpressUrl } from "@/lib/commerce";
 import { validateCart } from "@/lib/cart-validation";
 
 const noStore = { "Cache-Control": "no-store" };
-function failure(error: string, status: number) {
-  return Response.json({ error }, { status, headers: noStore });
+function failure(error: string, status: number, code?: string) {
+  return Response.json(
+    { error, ...(code ? { code } : {}) },
+    { status, headers: noStore },
+  );
 }
 
 export async function POST(request: Request) {
-  if (!isLive || process.env.CHECKOUT_ENABLED !== "true")
+  if (!isCommerceLive())
     return failure(
       "Orders aren't open yet. Please enjoy exploring our collection.",
       503,
+      "COMMERCE_NOT_LIVE",
+    );
+  if (!isCheckoutEnabled())
+    return failure(
+      "Orders aren't open yet. Please enjoy exploring our collection.",
+      503,
+      "CHECKOUT_DISABLED",
     );
   // Next.js may expose an internal hostname in request.url behind a proxy.
   // The browser's Origin must match the incoming Host, not that internal URL.
@@ -31,7 +41,11 @@ export async function POST(request: Request) {
     return failure("Invalid checkout request.", 415);
   const secret = process.env.WOOCOMMERCE_BRIDGE_SECRET;
   if (!secret || secret.length < 32)
-    return failure("Checkout is being prepared. Please try again later.", 503);
+    return failure(
+      "Checkout is being prepared. Please try again later.",
+      503,
+      "BRIDGE_NOT_CONFIGURED",
+    );
   try {
     const reader = request.body?.getReader();
     if (!reader) return failure("Your bag is empty.", 400);
