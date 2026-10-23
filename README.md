@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# pawmade — 美国宠物用品独立站
 
-## Getting Started
+Next.js 16 + React 19 前端，WordPress / WooCommerce 商品与订单后台。英文、美元、响应式设计。
 
-First, run the development server:
+## 本地运行
 
-```bash
+```powershell
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+访问 http://localhost:3000 。参考 `.env.example` 将需要的设置合并到现有 `.env.local`，不要覆盖已有配置。
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+默认 `COMMERCE_MODE=demo`，展示示例商品并关闭结账。真实商品模式设置 `COMMERCE_MODE=live`。支付由 WooCommerce 处理，必须安装随项目提供的桥接插件并完成配置后才能启用。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 验证
 
-## Learn More
+```powershell
+npm run lint
+npm run build
+npm run test:e2e
+```
 
-To learn more about Next.js, take a look at the following resources:
+浏览器测试需要本地服务运行，默认使用本机 Microsoft Edge。
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 完整教程
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+阅读 [中文上线指南](docs/上线指南.md)，包含：商品上架、WooCommerce 接入、结账插件、支付验收、GitHub/Vercel 部署、域名、商业上线准备。
 
-## Deploy on Vercel
+- [环境变量示例](.env.example)
+- [WordPress 结账插件源码](wordpress/pawmade-checkout/pawmade-checkout.php)
+- [预览图片来源](public/images/SOURCES.md)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+当前交付是可测试的开店基础版本。品牌名、示例商品、价格与法律页面仍需结合真实经营资料确认；未完成真实支付和物流验收前，不开启正式收款。
